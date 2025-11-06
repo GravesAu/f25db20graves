@@ -1,0 +1,19 @@
+extends layout
+
+block content
+  h1= title
+  p Pug index text has been changed.
+  button(type="button", class="btn btn-secondary", onclick="faster()") Press me
+  div(id="faster") add in extra
+
+  script.
+    let value = 1;
+    let amt = 2;
+
+    function faster() {
+      amt = amt * 2;
+      value = value + amt;
+      document.getElementById("faster").innerText = `Faster ${value} times ${amt}`;
+    }
+  p
+    a(href="/artifacts") View Artifacts

@@ -1,0 +1,23 @@
+extends layout
+
+block content
+  h1 Search Results – Artifacts
+
+  //- Hardcoded results 
+  -
+    const results = [
+      { material: 'Bronze', locationFound: 'Crete', estimatedAge: 3400 },
+      { material: 'Stone', locationFound: 'Peru', estimatedAge: 2200 },
+      { material: 'Clay', locationFound: 'Mesopotamia', estimatedAge: 4100 }
+    ];
+
+  //- Display the results
+  .container-fluid
+    .row
+      each item in results
+        .col-sm-2
+          h3 #{item.material}
+          p Location: #{item.locationFound}
+          p Age: #{item.estimatedAge} years
+
+
