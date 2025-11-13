@@ -4,11 +4,30 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
+require('dotenv').config();  // load .env variables
+const mongoose = require('mongoose'); // load mongoose
+
+const connectionString = process.env.MONGO_CON;
+
+mongoose.connect(connectionString, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+});
+
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+db.once('open', function() {
+    console.log('Connection to DB succeeded');
+});
+
+const Artifact = require('./models/artifact');
+
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var artifactsRouter = require('./routes/artifacts');
 var gridRouter = require('./routes/grid');
 var pickRouter = require('./routes/pick');
+var resourceRouter = require('./routes/resource');
 
 var app = express();
 
@@ -22,12 +41,31 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+async function recreateDB() {
+    // Delete all existing Artifact documents
+    await Artifact.deleteMany();
+
+    // Create three Artifact instances
+    let artifact1 = new Artifact({ artifact_name: "Ancient Vase", age: 120, material: "Clay" });
+    let artifact2 = new Artifact({ artifact_name: "Golden Amulet", age: 300, material: "Gold" });
+    let artifact3 = new Artifact({ artifact_name: "Mystic Scroll", age: 500, material: "Parchment" });
+
+    // Save each artifact
+    artifact1.save().then(doc => { console.log("First object saved"); }).catch(err => { console.error(err); });
+    artifact2.save().then(doc => { console.log("Second object saved"); }).catch(err => { console.error(err); });
+    artifact3.save().then(doc => { console.log("Third object saved"); }).catch(err => { console.error(err); });
+}
+
+// Turn on reseeding
+let reseed = true;
+if (reseed) { recreateDB(); }
+
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/artifacts', artifactsRouter);
 app.use('/grid', gridRouter);
 app.use('/selector', pickRouter);
-
+app.use('/resource', resourceRouter); // <-- fixed order, router must be correct
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -36,11 +74,8 @@ app.use(function(req, res, next) {
 
 // error handler
 app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-  // render the error page
   res.status(err.status || 500);
   res.render('error');
 });
