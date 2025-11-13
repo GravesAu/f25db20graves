@@ -11,9 +11,20 @@ exports.artifact_list = async function(req, res) {
 };
 
 // For a specific Artifact
-exports.artifact_detail = function(req, res) {
-    res.send('NOT IMPLEMENTED: Artifact detail: ' + req.params.id);
+exports.artifact_detail = async function(req, res) {
+    console.log("detail " + req.params.id);
+    try {
+        const result = await Artifact.findById(req.params.id);
+        if (!result) {
+            res.status(404).send(`{"error": "Artifact with id ${req.params.id} not found"}`);
+        } else {
+            res.send(result);
+        }
+    } catch (error) {
+        res.status(500).send(`{"error": "Error retrieving artifact with id ${req.params.id}"}`);
+    }
 };
+
 
 // Handle Artifact create on POST
 exports.artifact_create_post = async function(req, res) {
