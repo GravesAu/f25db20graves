@@ -25,6 +25,7 @@ exports.artifact_delete = function(req, res) {
     res.send('NOT IMPLEMENTED: Artifact delete DELETE ' + req.params.id);
 };
 
+
 // Handle Artifact update on PUT
 exports.artifact_update_put = function(req, res) {
     res.send('NOT IMPLEMENTED: Artifact update PUT ' + req.params.id);
