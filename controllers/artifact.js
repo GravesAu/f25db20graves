@@ -53,10 +53,33 @@ exports.artifact_delete = function(req, res) {
 };
 
 
-// Handle Artifact update on PUT
-exports.artifact_update_put = function(req, res) {
-    res.send('NOT IMPLEMENTED: Artifact update PUT ' + req.params.id);
+// Handle Artifact update form on PUT.
+exports.artifact_update_put = async function (req, res) {
+  console.log(`Update on id ${req.params.id} with body ${JSON.stringify(req.body)}`);
+
+  try {
+    let toUpdate = await Artifact.findById(req.params.id);
+
+    if (!toUpdate) {
+      res.status(404);
+      res.send(`{"error": "Artifact with id ${req.params.id} not found"}`);
+      return;
+    }
+
+    // Update fields if they are in the request body
+    if (req.body.artifact_name) toUpdate.artifact_name = req.body.artifact_name;
+    if (req.body.age) toUpdate.age = req.body.age;
+    if (req.body.material) toUpdate.material = req.body.material;
+
+    let result = await toUpdate.save();
+    console.log("Success " + result);
+    res.send(result);
+  } catch (err) {
+    res.status(500);
+    res.send(`{"error": "${err}: Update for id ${req.params.id} failed"}`);
+  }
 };
+
 // Show all Artifacts in a Pug view
 exports.artifact_view_all_Page = async function(req, res) {
   try {
