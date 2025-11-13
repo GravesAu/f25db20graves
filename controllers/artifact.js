@@ -16,8 +16,24 @@ exports.artifact_detail = function(req, res) {
 };
 
 // Handle Artifact create on POST
-exports.artifact_create_post = function(req, res) {
-    res.send('NOT IMPLEMENTED: Artifact create POST');
+exports.artifact_create_post = async function(req, res) {
+    console.log(req.body); // logs the incoming request body
+
+    // Create a new Artifact instance
+    let document = new Artifact();
+
+    // Expecting a JSON body like:
+    // {"artifact_name":"Ancient Vase", "age":120, "material":"Clay"}
+    document.artifact_name = req.body.artifact_name;
+    document.age = req.body.age;
+    document.material = req.body.material;
+
+    try {
+        let result = await document.save(); // save to MongoDB
+        res.send(result); // respond with the created document
+    } catch (err) {
+        res.status(500).send(`{"error": ${err}}`);
+    }
 };
 
 // Handle Artifact delete on DELETE
@@ -30,3 +46,17 @@ exports.artifact_delete = function(req, res) {
 exports.artifact_update_put = function(req, res) {
     res.send('NOT IMPLEMENTED: Artifact update PUT ' + req.params.id);
 };
+// Show all Artifacts in a Pug view
+exports.artifact_view_all_Page = async function(req, res) {
+  try {
+    const allArtifacts = await Artifact.find(); // get all artifacts from DB
+    res.render('artifacts', { 
+      title: 'Artifact Search Results', 
+      results: allArtifacts  // pass to Pug as "results"
+    });
+  } catch (err) {
+    res.status(500).send(`{"error": ${err}}`);
+  }
+};
+
+
