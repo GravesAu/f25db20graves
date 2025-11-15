@@ -97,6 +97,7 @@ exports.artifact_update_put = async function (req, res) {
   }
 };
 
+// view all artifacts
 exports.artifact_view_all_Page = async function(req, res) {
   try {
     const allArtifacts = await Artifact.find(); // get all artifacts from DB
@@ -110,7 +111,7 @@ exports.artifact_view_all_Page = async function(req, res) {
 };
 
 
-
+// view one by id
 exports.artifact_view_one_Page = async function(req, res) {
     console.log("single view for id " + req.query.id)
     try {
@@ -132,7 +133,7 @@ exports.artifact_view_one_Page = async function(req, res) {
     }
 };
 
-// Render the create artifact page
+//create artifact page
 exports.artifact_create_Page = function(req, res) {
     console.log("create view");
     try {
@@ -141,3 +142,23 @@ exports.artifact_create_Page = function(req, res) {
         res.status(500).send(`{'error': '${err}'}`);
     }
 };
+
+// Update artifact page 
+exports.artifact_update_Page = async function(req, res) {
+    console.log("update view for id " + req.query.id);
+    try {
+        let result = await Artifact.findById(req.query.id);
+        if (!result) {
+            res.status(404).send(`Artifact with id ${req.query.id} not found`);
+            return;
+        }
+        res.render('artifactupdate', { 
+            title: 'Artifact Update', 
+            toShow: result 
+        });
+    } catch(err) {
+        res.status(500).send(`{'error': '${err}'}`);
+    }
+};
+
+
