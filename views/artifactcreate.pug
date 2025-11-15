@@ -1,0 +1,35 @@
+extends layout
+
+block content
+  h1= title
+
+  form(id='ArtifactForm', action="/resource/artifacts", method="POST")
+    div.form-group
+      label.artifactAttr(for='artifact_name') Artifact Name
+      input#artifact_name(type='text', name='artifact_name', required)
+
+    div.form-group
+      label.artifactAttr(for='age') Age
+      input#age(type='number', name='age', required)
+
+    div.form-group
+      label.artifactAttr(for='material') Material
+      input#material(type='text', name='material', required)
+
+    input(type="submit" value="Create Artifact")
+
+  script.
+    document.forms['ArtifactForm'].addEventListener('submit', (event) => {
+      event.preventDefault();
+      fetch(event.target.action, {
+        method: 'POST',
+        body: new URLSearchParams(new FormData(event.target))
+      }).then(resp => resp.json())
+      .then(body => {
+        alert("Save succeeded");
+        console.log(body);
+      })
+      .catch(error => {
+        alert("Save failed: " + error);
+      });
+    });

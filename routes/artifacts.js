@@ -5,6 +5,9 @@ var router = express.Router();
 /* GET artifacts page (all artifacts) */
 router.get('/', artifact_controller.artifact_view_all_Page);
 
+router.get('/create', artifact_controller.artifact_create_Page);
+
+
 /* GET detail page for one artifact */
 router.get('/detail', artifact_controller.artifact_view_one_Page);
 
