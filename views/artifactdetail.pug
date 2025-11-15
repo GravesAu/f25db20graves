@@ -1,0 +1,26 @@
+extends layout
+
+block content
+  h1= title
+
+  - let artifactId = toShow._id
+  - let artifactName = toShow.artifact_name
+  - let artifactAge = toShow.age
+  - let artifactMaterial = toShow.material
+
+  div
+    div.row
+      div(class='artifactAttr mr-3') Artifact ID:
+      div #{artifactId}
+
+    div.row
+      div(class='artifactAttr mr-3') Artifact Name:
+      div #{artifactName}
+
+    div.row
+      div(class='artifactAttr mr-3') Age:
+      div #{artifactAge}
+
+    div.row
+      div(class='artifactAttr mr-3') Material:
+      div #{artifactMaterial}

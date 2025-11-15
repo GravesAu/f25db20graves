@@ -97,17 +97,38 @@ exports.artifact_update_put = async function (req, res) {
   }
 };
 
-// Show all Artifacts in a Pug view
 exports.artifact_view_all_Page = async function(req, res) {
   try {
     const allArtifacts = await Artifact.find(); // get all artifacts from DB
     res.render('artifacts', { 
       title: 'Artifact Search Results', 
-      results: allArtifacts  // pass to Pug as "results"
+      results: allArtifacts  
     });
   } catch (err) {
     res.status(500).send(`{"error": ${err}}`);
   }
 };
 
+
+
+exports.artifact_view_one_Page = async function(req, res) {
+    console.log("single view for id " + req.query.id)
+    try {
+        let result = await Artifact.findById(req.query.id);
+
+        if (!result) {
+            // artifact not found
+            res.status(404).send(`Artifact with id ${req.query.id} not found`);
+            return;
+        }
+
+        res.render('artifactdetail', { 
+            title: 'Artifact Detail', 
+            toShow: result 
+        });
+    } catch (err) {
+        res.status(500);
+        res.send(`{'error': '${err}'}`);
+    }
+};
 
