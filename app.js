@@ -9,15 +9,33 @@ const mongoose = require('mongoose'); // load mongoose
 
 const connectionString = process.env.MONGO_CON;
 
-mongoose.connect(connectionString, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-});
+mongoose.connect(connectionString);
 
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
-db.once('open', function() {
+db.once('open', async function() {
     console.log('Connection to DB succeeded');
+
+    // ---- MOVED RESEED INTO HERE ----
+    async function recreateDB() {
+        // Delete all existing Artifact documents
+        await Artifact.deleteMany();
+
+        // Create three Artifact instances
+        let artifact1 = new Artifact({ artifact_name: "Ancient Vase", age: 120, material: "Clay" });
+        let artifact2 = new Artifact({ artifact_name: "Golden Amulet", age: 300, material: "Gold" });
+        let artifact3 = new Artifact({ artifact_name: "Mystic Scroll", age: 500, material: "Parchment" });
+
+        // Save each artifact
+        artifact1.save().then(doc => { console.log("First object saved"); }).catch(err => { console.error(err); });
+        artifact2.save().then(doc => { console.log("Second object saved"); }).catch(err => { console.error(err); });
+        artifact3.save().then(doc => { console.log("Third object saved"); }).catch(err => { console.error(err); });
+    }
+
+    // Turn on reseeding
+    let reseed = true;
+    if (reseed) { await recreateDB(); }
+    // ---- END OF FIX ----
 });
 
 const Artifact = require('./models/artifact');
@@ -40,25 +58,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-
-async function recreateDB() {
-    // Delete all existing Artifact documents
-    await Artifact.deleteMany();
-
-    // Create three Artifact instances
-    let artifact1 = new Artifact({ artifact_name: "Ancient Vase", age: 120, material: "Clay" });
-    let artifact2 = new Artifact({ artifact_name: "Golden Amulet", age: 300, material: "Gold" });
-    let artifact3 = new Artifact({ artifact_name: "Mystic Scroll", age: 500, material: "Parchment" });
-
-    // Save each artifact
-    artifact1.save().then(doc => { console.log("First object saved"); }).catch(err => { console.error(err); });
-    artifact2.save().then(doc => { console.log("Second object saved"); }).catch(err => { console.error(err); });
-    artifact3.save().then(doc => { console.log("Third object saved"); }).catch(err => { console.error(err); });
-}
-
-// Turn on reseeding
-let reseed = true;
-if (reseed) { recreateDB(); }
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);

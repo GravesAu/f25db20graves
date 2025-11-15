@@ -47,10 +47,27 @@ exports.artifact_create_post = async function(req, res) {
     }
 };
 
-// Handle Artifact delete on DELETE
-exports.artifact_delete = function(req, res) {
-    res.send('NOT IMPLEMENTED: Artifact delete DELETE ' + req.params.id);
+// Handle Artifact delete on DELETE.
+exports.artifact_delete = async function(req, res) {
+  console.log("Delete request for id " + req.params.id);
+
+  try {
+    let result = await Artifact.findByIdAndDelete(req.params.id);
+
+    if (!result) {
+      res.status(404);
+      res.send(`{"error": "Artifact with id ${req.params.id} not found"}`);
+      return;
+    }
+
+    console.log("Removed:", result);
+    res.send(result);   // Sends back the deleted object
+  } catch (err) {
+    res.status(500);
+    res.send(`{"error": "Error deleting: ${err}"}`);
+  }
 };
+
 
 
 // Handle Artifact update form on PUT.
