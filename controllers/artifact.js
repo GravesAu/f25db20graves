@@ -118,8 +118,11 @@ exports.artifact_view_one_Page = async function(req, res) {
         let result = await Artifact.findById(req.query.id);
 
         if (!result) {
-            // artifact not found
-            res.status(404).send(`Artifact with id ${req.query.id} not found`);
+            // artifact not found, render page with null
+            res.render('artifactdetail', { 
+                title: 'Artifact Not Found', 
+                toShow: null 
+            });
             return;
         }
 
@@ -132,6 +135,7 @@ exports.artifact_view_one_Page = async function(req, res) {
         res.send(`{'error': '${err}'}`);
     }
 };
+
 
 //create artifact page
 exports.artifact_create_Page = function(req, res) {
@@ -148,10 +152,16 @@ exports.artifact_update_Page = async function(req, res) {
     console.log("update view for id " + req.query.id);
     try {
         let result = await Artifact.findById(req.query.id);
+
         if (!result) {
-            res.status(404).send(`Artifact with id ${req.query.id} not found`);
+            // artifact not found, render page with null
+            res.render('artifactupdate', { 
+                title: 'Artifact Not Found', 
+                toShow: null 
+            });
             return;
         }
+
         res.render('artifactupdate', { 
             title: 'Artifact Update', 
             toShow: result 
@@ -161,4 +171,18 @@ exports.artifact_update_Page = async function(req, res) {
     }
 };
 
+// Render delete artifact page 
+exports.artifact_delete_Page = async function(req, res) {
+    console.log("Delete view for id " + req.query.id);
+    try {
+        let result = await Artifact.findById(req.query.id);
+        if (!result) {
+            res.status(404).send(`Artifact with id ${req.query.id} not found`);
+            return;
+        }
+        res.render('artifactdelete', { title: 'Delete Artifact', toShow: result });
+    } catch(err) {
+        res.status(500).send(`{'error': '${err}'}`);
+    }
+};
 

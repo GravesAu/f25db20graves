@@ -1,26 +1,26 @@
 extends layout
 
 block content
-  h1= title
+  //- Big dark green header
+  div(style="background-color: #006400; color: white; padding: 1rem; margin-bottom: 2rem; text-align: left; border-radius: 0.5rem;")
+    h1 Artifact Detail
 
-  - let artifactId = toShow._id
-  - let artifactName = toShow.artifact_name
-  - let artifactAge = toShow.age
-  - let artifactMaterial = toShow.material
+  if (!toShow)
+    div(style="color: red; font-weight: bold;")
+      h2 No artifact found with this ID
+  else
+    - let artifactId = toShow._id
+    - let artifactName = toShow.artifact_name
+    - let artifactAge = toShow.age
+    - let artifactMaterial = toShow.material
 
-  div
-    div.row
-      div(class='artifactAttr mr-3') Artifact ID:
-      div #{artifactId}
+    //- Rows without box
+    mixin row(label, value)
+      div.row(style="display: flex; padding: 0.5rem;")
+        div(style="flex: 1; background-color: #006400; color: white; padding: 0.5rem; font-weight: bold;") #{label}
+        div(style="flex: 2; background-color: white; padding: 0.5rem;") #{value}
 
-    div.row
-      div(class='artifactAttr mr-3') Artifact Name:
-      div #{artifactName}
-
-    div.row
-      div(class='artifactAttr mr-3') Age:
-      div #{artifactAge}
-
-    div.row
-      div(class='artifactAttr mr-3') Material:
-      div #{artifactMaterial}
+    +row('Artifact ID', artifactId)
+    +row('Name', artifactName)
+    +row('Age', artifactAge)
+    +row('Material', artifactMaterial)

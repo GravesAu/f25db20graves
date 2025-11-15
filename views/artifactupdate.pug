@@ -3,40 +3,42 @@ extends layout
 block content
   h1= title
 
-  - let artifactId = toShow._id
-  - let artifactName = toShow.artifact_name
-  - let artifactAge = toShow.age
-  - let artifactMaterial = toShow.material
-  - let actionid = "/artifacts/" + artifactId
+  if toShow == null
+    h2 No artifact found with this ID
+  else
+    - let artifactId = toShow._id
+    - let artifactName = toShow.artifact_name
+    - let artifactAge = toShow.age
+    - let artifactMaterial = toShow.material
+    - let actionid = "/artifacts/" + artifactId
 
-  div.row(class='mb-2')
-    div.mr-1 ID:
-    div #{artifactId}
+    div.row.mb-2
+      div.mr-1 ID:
+      div #{artifactId}
 
-  form(id='ArtifactForm', action=actionid, method="PUT")
-    div.form-group
-      label.artifactAttr(for='artifact_name') Name
-      input#artifact_name(type='text', name='artifact_name', value=artifactName)
-    div.form-group
-      label.artifactAttr(for='age') Age
-      input#age(type='number', name='age', value=artifactAge)
-    div.form-group
-      label.artifactAttr(for='material') Material
-      input#material(type='text', name='material', value=artifactMaterial)
-    input(type='submit')
+    form#ArtifactForm(action=actionid, method="PUT")
+      div.form-group
+        label.artifactAttr(for='artifact_name') Name
+        input#artifact_name(type='text', name='artifact_name', value=artifactName)
+      div.form-group
+        label.artifactAttr(for='age') Age
+        input#age(type='number', name='age', value=artifactAge)
+      div.form-group
+        label.artifactAttr(for='material') Material
+        input#material(type='text', name='material', value=artifactMaterial)
+      input(type='submit', value='Update', class='btn btn-success')
 
-  script.
-    document.forms['ArtifactForm'].addEventListener('submit', (event) => {
-      event.preventDefault();
-      fetch(event.target.action, {
-        method: 'PUT',
-        body: new URLSearchParams(new FormData(event.target))
-      })
-      .then(resp => resp.json())
-      .then(data => {
-        alert("Update succeeded");
-        // Redirect to detail page to see changes
-        window.location.href = "/artifacts/detail/?id=" + data._id;
-      })
-      .catch(err => alert("Update failed: " + err));
-    });
+    script.
+      document.forms['ArtifactForm'].addEventListener('submit', function(event) {
+        event.preventDefault();
+        fetch(this.action, {
+          method: 'PUT',
+          body: new URLSearchParams(new FormData(this))
+        })
+        .then(resp => resp.json())
+        .then(data => {
+          alert("Update succeeded");
+          window.location.href = "/artifacts/detail/?id=" + data._id;
+        })
+        .catch(err => alert("Update failed: " + err));
+      });
