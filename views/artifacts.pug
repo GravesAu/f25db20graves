@@ -7,9 +7,14 @@ block content
   .container-fluid
     .row
       each item in results
+        - let destination = `dispatch(\"/artifacts/update?id=${item._id}\")`
         .col-sm-2
           h3 #{item.artifact_name}
           p Material: #{item.material}
           p Age: #{item.age} years
+          button.btn(class="btn-primary ml-1", onclick=destination) Update
 
-
+  script.
+    function dispatch(path) {
+      window.location.href = path;
+    }
