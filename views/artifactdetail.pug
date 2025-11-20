@@ -14,7 +14,7 @@ block content
     - let artifactAge = toShow.age
     - let artifactMaterial = toShow.material
 
-    //- Rows without box
+  
     mixin row(label, value)
       div.row(style="display: flex; padding: 0.5rem;")
         div(style="flex: 1; background-color: #006400; color: white; padding: 0.5rem; font-weight: bold;") #{label}
@@ -24,3 +24,4 @@ block content
     +row('Name', artifactName)
     +row('Age', artifactAge)
     +row('Material', artifactMaterial)
+s

@@ -1,8 +1,6 @@
 extends layout
-
 block content
   h1= title
-
   if toShow == null
     h2 No artifact found with this ID
   else
@@ -11,11 +9,9 @@ block content
     - let artifactAge = toShow.age
     - let artifactMaterial = toShow.material
     - let actionid = "/artifacts/" + artifactId
-
     div.row.mb-2
       div.mr-1 ID:
       div #{artifactId}
-
     form#ArtifactForm(action=actionid, method="PUT")
       div.form-group
         label.artifactAttr(for='artifact_name') Name
@@ -27,7 +23,6 @@ block content
         label.artifactAttr(for='material') Material
         input#material(type='text', name='material', value=artifactMaterial)
       input(type='submit', value='Update', class='btn btn-success')
-
     script.
       document.forms['ArtifactForm'].addEventListener('submit', function(event) {
         event.preventDefault();
