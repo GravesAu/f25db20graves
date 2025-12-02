@@ -3,16 +3,22 @@ extends layout
 block content
   h1 #{title}
 
+  //- Button at the top to go to the create page
+  .mb-3
+    button.btn.btn-success(type="button", onclick="window.location.href='/artifacts/create'") Create New Artifact
+
   //- Display the results from the database
   .container-fluid
     .row
       each item in results
-        - let destination = `dispatch(\"/artifacts/update?id=${item._id}\")`
-        .col-sm-2
+        .col-sm-3.mb-3
           h3 #{item.artifact_name}
           p Material: #{item.material}
           p Age: #{item.age} years
-          button.btn(class="btn-primary ml-1", onclick=destination) Update
+          //- Buttons for each artifact
+          button.btn.btn-primary.m-1(type="button", onclick=`dispatch('/artifacts/update?id=${item._id}')`) Update
+          button.btn.btn-info.m-1(type="button", onclick=`dispatch('/artifacts/detail?id=${item._id}')`) Detail
+          button.btn.btn-danger.m-1(type="button", onclick=`dispatch('/artifacts/delete?id=${item._id}')`) Delete
 
   script.
     function dispatch(path) {
