@@ -18,7 +18,6 @@ router.get('/create', artifact_controller.artifact_create_Page); // Create form
 
 /* GET update artifact page (protected) */
 router.get('/update', secured, artifact_controller.artifact_update_Page);
-
 router.get('/detail', artifact_controller.artifact_view_one_Page); // Detail page
 router.get('/delete', artifact_controller.artifact_delete_Page); // Delete page
 
